@@ -4,11 +4,9 @@
     :default-active="activeIndex"
     mode="horizontal"
     router
-    @select="handleSelect"
   >
-    <el-menu-item index="task" :route="{name: 'system_task'}">
-      <i class="el-icon-tickets"></i>
-      <span slot="title">任务管理</span>
+    <el-menu-item v-for="item in tabList" :key="item[1]" :index="item[1]" :route="{name: item[1]}">
+      <span slot="title">{{item[0]}}</span>
     </el-menu-item>
   </el-menu>
 </template>
@@ -17,9 +15,8 @@ export default {
   name: "topMenu",
   data: function() {
     return {
-      activeIndex: "task",
-      tabList: [1],
-      current_tab_name: "",
+      activeIndex: 0,
+      tabList: [],
       comic_tabs: [["漫画列表", "comic_list"], ["漫画详情", "comic_detail"]],
       book_tabs: [["小说列表", "book_list"], ["小说详情", "book_detail"]],
       user_tabs: [["用户列表", "user_list"]],
@@ -28,7 +25,28 @@ export default {
   },
   methods: {
     handleSelect: function(index, indexPath) {
-      this.$router.push({ name: "system_task" });
+      // this.$router.push({ name: "system_task" });
+    },
+    set_tabList_data: function() {
+      const route_name = this.$route.path;
+      if (route_name.indexOf("comic") !== -1) {
+        this.$data.tabList = this.$data.comic_tabs;
+      } else if (route_name.indexOf("book") !== -1) {
+        this.$data.tabList = this.$data.book_tabs;
+      } else if (route_name.indexOf("user") !== -1) {
+        this.$data.tabList = this.$data.user_tabs;
+      } else if (route_name.indexOf("system") !== -1) {
+        this.$data.tabList = this.$data.system_tabs;
+      }
+      this.$data.activeIndex = this.$data.tabList[0][1];
+    }
+  },
+  mounted: function() {
+    this.set_tabList_data();
+  },
+  watch: {
+    $route: function() {
+      this.set_tabList_data();
     }
   }
 };

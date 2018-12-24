@@ -8,7 +8,8 @@
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="180"></el-table-column>
-      <el-table-column fixed prop="title" label="书名" width="180"></el-table-column>
+      <el-table-column prop="title" label="章节名" width="180"></el-table-column>
+      <el-table-column prop="origin_addr" label="原始地址" width="180"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
@@ -38,7 +39,7 @@ export default {
   name: "bookDetail",
   data: function() {
     return {
-      book_id: "",
+      book_id: this.$route.params.id,
       search_title: "",
       search_time: "",
       tableData: [],
@@ -49,11 +50,11 @@ export default {
   methods: {
     refreshTable: function(res) {
       this.$data.tableData = res.chapter;
-      this.$data.pageination.total = res.chapter.lenght;
+      this.$data.pageination.total = res.chapter.length;
     },
     get_book_detail: function(book_id) {
       getBookDetail(book_id).then(res => {
-        this.refreshTable(res.chapter);
+        this.refreshTable(res);
       });
     },
     tableRowClassName: function({ row }) {
@@ -98,7 +99,7 @@ export default {
     }
   },
   mounted: function() {
-    // this.get_book_detail(this.$data.book_id);
+    this.get_book_detail(this.$data.book_id);
   }
 };
 </script>
