@@ -15,7 +15,7 @@
       </el-form-item>
     </el-form>
 
-    <el-dialog title="任务编辑" :visible.sync="editDialog" width="30%" @close="closeDialog">
+    <el-dialog title="编辑小说" :visible.sync="editDialog" width="30%" @close="closeDialog">
       <TaskEdit
         :task_id="edit_task_id"
         :edit_type="edit_type"

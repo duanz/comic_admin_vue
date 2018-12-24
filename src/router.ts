@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import MobileView from './components/MobileView.vue';
-import TaskEdit from './components/TaskEdit.vue';
+// import TaskEdit from './components/TaskEdit.vue';
 import TaskList from './components/TaskList.vue';
 import ComicList from './components/ComicList.vue';
 import BookList from './components/BookList.vue';
@@ -16,18 +16,18 @@ export default new Router({
   routes: [
     {
       path: '/comic',
-      name: 'comic_index',
       component: TabBase,
       children: [
-        { path: 'list', name: "comic_list", components: { default: ComicList } },
+        // { path: '', component: ComicList },
+        { path: '', name: "comic_list", component: ComicList },
       ]
     },
     {
       path: '/book',
-      name: 'book_index',
       component: TabBase,
       children: [
-        { path: 'list', name: "book_list", components: { default: BookList, book_detail: BookDetail } },
+        { path: '', name: "book_list", component: BookList },
+        { path: ':id', name: "book_detail", component: BookDetail },
       ]
     },
     {
@@ -37,11 +37,10 @@ export default new Router({
     },
     {
       path: '/system',
-      name: 'system_index',
       component: TabBase,
       children: [
-        { path: 'task', name: "task", components: { default: TaskList, edit: TaskEdit } },
+        { path: '', name: "system_task", component: TaskList },
       ]
-    }
+    },
   ],
 });

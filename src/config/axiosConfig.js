@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import { loadingInstance } from '../config/commentData';
+// import { loadingInstance } from '../config/commentData';
 import { Loading, MessageBox } from 'element-ui';
 // export const loadingInstance = Loading.service({ fullscreen: true });
 // http://www.php.cn/js-tutorial-394589.html
@@ -33,7 +33,7 @@ axios.defaults.withCredentials = true
 // 添加请求拦截器
 axios.interceptors.request.use(
     config => {
-        loadingInstance;
+        // loadingInstance;
 
         if (config.method === 'post') {
             config.data = qs.stringify(config.data);
@@ -55,7 +55,7 @@ axios.interceptors.request.use(
     },
 
     err => {
-        loadingInstance.close();
+        // loadingInstance.close();
         MessageBox.alert("处理失败");
         return Promise.reject(err);
     }
@@ -66,7 +66,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     res => {
         if (res.status === 200) {
-            loadingInstance.close();
+            // loadingInstance.close();
 
             if (res.data.code === 404) {
                 MessageBox.alert("处理失败");
@@ -81,7 +81,7 @@ axios.interceptors.response.use(
         }
     },
     err => {
-        loadingInstance.close();
+        // loadingInstance.close();
         MessageBox.alert("处理失败");
         return Promise.reject(err)
     }

@@ -8,48 +8,37 @@
     </el-header>
 
     <el-container>
-      <el-container>
-        <el-aside width="auto">
-          <!-- <el-button
-            type="success"
-            icon="el-icon-view"
-            style="margin-top: 10px;"
-            circle
-            @click="handleMobileView"
-          ></el-button>-->
-          <LeftMenu></LeftMenu>
-        </el-aside>
+      <el-aside width="auto">
+        <LeftMenu></LeftMenu>
+      </el-aside>
 
-        <el-main style="background-color:#F2F6FC;">
-          <!-- <el-container
-            class="admin_view height"
-            v-if="admin_view"
-          >-->
-          <router-view></router-view>
-          <!-- </el-container> -->
-          <!-- <el-container
-            class="mobile_view"
-            v-if="!admin_view"
-          >-->
-          <!-- <MobileView class="mobile_view" v-if="!admin_view" /> -->
-          <!-- </el-container> -->
-        </el-main>
-      </el-container>
-
-      <el-footer style="background-color:#909399;"></el-footer>
+      <el-main style="background-color:#F2F6FC;">
+        <router-view></router-view>
+        <!-- <el-container> -->
+        <!-- <el-header width="auto"> -->
+        <!-- <TopMenu></TopMenu> -->
+        <!-- </el-header> -->
+        <!-- <el-main> -->
+        <!-- <router-view></router-view> -->
+        <!-- </el-main> -->
+        <!-- </el-container> -->
+      </el-main>
     </el-container>
+    <el-footer style="background-color:#909399;"></el-footer>
   </el-container>
 </template>
 
 <script>
 import LeftMenu from "@/components/LeftMenu.vue";
+import TopMenu from "@/components/TopMenu.vue";
 import MobileView from "@/components/MobileView.vue";
 
 export default {
   name: "Base",
   components: {
     MobileView,
-    LeftMenu
+    LeftMenu,
+    TopMenu
   },
   data: function() {
     return {

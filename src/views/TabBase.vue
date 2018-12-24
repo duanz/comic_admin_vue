@@ -1,34 +1,20 @@
 <template>
   <el-container class="height" direction="vertical">
-    <el-tabs v-if="tabList" class="height" type="border-card" v-model="current_tab_name">
-      <el-tab-pane
-        v-for="(tab, index) in tabList"
-        :label="tab[0]"
-        v-bind:key="index"
-        :name="tab[1]"
-      >
-        <!-- <el-container class="height" direction="vertical">
-        <el-main>-->
-        <router-view v-if="index===0"></router-view>
-        <router-view v-else-if="index!==0" :name="tab[1]"></router-view>
-        <!-- <router-view></router-view> -->
-        <!-- </el-main>
-        </el-container>-->
-      </el-tab-pane>
-    </el-tabs>
+    <TopMenu></TopMenu>
+    <router-view></router-view>
   </el-container>
 </template>
 <script>
+import TopMenu from "@/components/TopMenu.vue";
 export default {
   name: "tabViewBase",
+  components: {
+    TopMenu
+  },
   data: function() {
     return {
       tabList: [],
-      current_tab_name: "",
-      comic_tabs: [["漫画列表", "comic_list"], ["漫画详情", "comic_detail"]],
-      book_tabs: [["小说列表", "book_list"], ["小说详情", "book_detail"]],
-      user_tabs: [["用户列表", "user_list"]],
-      system_tabs: [["任务列表", "task"], ["任务编辑", "edit"]]
+      current_tab_name: ""
     };
   },
   methods: {
@@ -61,14 +47,14 @@ export default {
     }
   },
   mounted: function() {
-    this.set_tabList_data();
+    // this.set_tabList_data();
   },
   watch: {
     tabList: function() {
-      this.set_current_tab_name();
+      // this.set_current_tab_name();
     },
     $route: function() {
-      this.set_tabList_data();
+      // this.set_tabList_data();
     }
   }
 };
