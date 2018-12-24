@@ -98,7 +98,7 @@ export default {
     }
   },
   mounted: function() {
-    this.get_book_detail(this.$data.book_id);
+    // this.get_book_detail(this.$data.book_id);
   }
 };
 </script>

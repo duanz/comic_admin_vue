@@ -1,5 +1,5 @@
 import { Loading, MessageBox } from 'element-ui';
-export const loadingInstance = Loading.service({ fullscreen: true });
+// export const loadingInstance = Loading.service({ fullscreen: true });
 // export const loadingInstance = "Loading.service({ fullscreen: true })";
 
 export const HISTORY_DATA_TYPE = { BOOK: '小说', COMIC: '漫画' };
