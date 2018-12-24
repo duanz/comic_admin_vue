@@ -14,14 +14,6 @@
 
       <el-main style="background-color:#F2F6FC;">
         <router-view></router-view>
-        <!-- <el-container> -->
-        <!-- <el-header width="auto"> -->
-        <!-- <TopMenu></TopMenu> -->
-        <!-- </el-header> -->
-        <!-- <el-main> -->
-        <!-- <router-view></router-view> -->
-        <!-- </el-main> -->
-        <!-- </el-container> -->
       </el-main>
     </el-container>
     <el-footer style="background-color:#909399;"></el-footer>

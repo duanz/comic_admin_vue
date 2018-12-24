@@ -37,7 +37,7 @@
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row, 'detail')" type="text" size="small">查看</el-button>
-          <!-- <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button> -->
+          <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -88,18 +88,20 @@ export default {
     },
     tableRowClassName: function({ row }) {
       if (row.task_status === "FINISH") {
-        console.log(1);
         return "success-row";
       } else if (row.task_status === "FAILD") {
-        console.log(2);
         return "warning-row";
       }
       return "";
     },
     handleClick(row, type) {
-      this.$data.edit_task_id = row.id;
-      this.$data.edit_type = type;
-      this.$data.editDialog = true;
+      if(type === "detail"){
+        this.$router.push({name: "book_detail", params: {id: row.id} });
+      }else{
+        this.$data.edit_task_id = row.id;
+        this.$data.edit_type = type;
+        this.$data.editDialog = true;
+      }
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
