@@ -12,6 +12,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="editDialog = !editDialog">添加任务</el-button>
+        <el-button type="info" @click="get_task_list">刷新</el-button>
       </el-form-item>
     </el-form>
 

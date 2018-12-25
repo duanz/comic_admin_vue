@@ -18,7 +18,6 @@ export default new Router({
       path: '/comic',
       component: TabBase,
       children: [
-        // { path: '', component: ComicList },
         { path: '', name: "comic_list", component: ComicList },
       ]
     },
@@ -39,7 +38,7 @@ export default new Router({
       path: '/system',
       component: TabBase,
       children: [
-        { path: '', name: "system_task", component: TaskList },
+        { path: '', name: "task_list", component: TaskList },
       ]
     },
   ],

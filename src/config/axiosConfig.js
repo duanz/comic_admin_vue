@@ -33,7 +33,7 @@ axios.defaults.withCredentials = true
 // 添加请求拦截器
 axios.interceptors.request.use(
     config => {
-        // loadingInstance;
+        // Loading.service({ fullscreen: true });
 
         if (config.method === 'post') {
             config.data = qs.stringify(config.data);
@@ -55,7 +55,7 @@ axios.interceptors.request.use(
     },
 
     err => {
-        // loadingInstance.close();
+        // Loading.service({ fullscreen: true }).close();
         MessageBox.alert("处理失败");
         return Promise.reject(err);
     }
@@ -65,9 +65,8 @@ axios.interceptors.request.use(
 // 添加响应拦截器
 axios.interceptors.response.use(
     res => {
+        // Loading.service({ fullscreen: true }).close();
         if (res.status === 200) {
-            // loadingInstance.close();
-
             if (res.data.code === 404) {
                 MessageBox.alert("处理失败");
                 return Promise.reject(res);
@@ -75,13 +74,12 @@ axios.interceptors.response.use(
 
             return Promise.resolve(res);
         } else {
-            loadingInstance.close();
             MessageBox.alert("处理失败");
             return Promise.reject(res);
         }
     },
     err => {
-        // loadingInstance.close();
+        // Loading.service({ fullscreen: true }).close();
         MessageBox.alert("处理失败");
         return Promise.reject(err)
     }
