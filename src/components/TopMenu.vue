@@ -18,10 +18,10 @@ export default {
     return {
       activeIndex: "",
       tabList: [],
-      comic_tabs: [["漫画列表", "comic_list"], ["漫画详情", "comic_detail"]],
+      comic_tabs: [["漫画列表", "comic_list"], ["漫画详情", "comic_detail"], ["章节详情", "comic_chapter_detail"]],
       book_tabs: [["小说列表", "book_list"], ["小说详情", "book_detail"]],
       user_tabs: [["用户列表", "user_list"]],
-      system_tabs: [["任务列表", "task_list"], ["任务编辑", "task_edit"]]
+      system_tabs: [["任务列表", "task_list"], ]
     };
   },
   methods: {

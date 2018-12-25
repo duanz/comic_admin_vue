@@ -10,11 +10,21 @@
       @selection-change="handleSelectionChange"
       :row-class-name="tableRowClassName"
     >
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="ID" width="180"></el-table-column>
-      <el-table-column prop="title" label="章节名" width="180"></el-table-column>
-      <el-table-column prop="origin_addr" label="原始地址" width="180"></el-table-column>
-      <el-table-column prop="update_at" label="更新时间"></el-table-column>
+      <el-table-column
+        label="日期">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="日期"
+        width="150">
+        <template slot-scope="scope">
+          <!-- <i class="el-icon-time"></i> -->
+          <img src="https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1559121849,1979113738&fm=85&s=C7B839C51643035D9F1961B70300D000" class="icon_image">
+          <!-- <img :src="scope.row" class="icon_image"> -->
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row, 'detail')" type="text" size="small">查看</el-button>
@@ -28,8 +38,8 @@
       @current-change="handleCurrentChange"
       :current-page="pageination.current"
       :background="true"
-      :page-sizes="[30, 100, 200]"
-      :page-size="pageSize"
+      :page-sizes="[30, 1]"
+      :page-size="30"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageination.total"
     ></el-pagination>
@@ -37,47 +47,29 @@
 </template>
 <script>
 import { TASK_TYPE, TASK_STATUS } from "../config/commentData";
-import { getBookDetail, getBookChapterDetail } from "../api/bookApi";
+import { getComicDetail, getComicChapterDetail } from "../api/comicApi";
 
 export default {
-  name: "bookDetail",
+  name: "comicChapterDetail",
   data: function() {
     return {
-      book_id: this.$route.params.id,
-      search_title: "",
-      search_time: "",
+      chapter_id: this.$route.params.id,
       tableData: [],
       chapterTable: [],
       pageination: { current: 0, total: 0 },
       detailDialog: false,
-      dialogContent: "",
-      allTableData: "",
-      pageSize: 30
+      dialogContent: ""
     };
   },
   methods: {
     refreshTable: function(res) {
-      this.$data.allTableData = res.chapter;
-      this.$data.tableData = res.chapter.slice(0, this.$data.pageSize);
-      this.$data.pageination.total = res.chapter.length;
-    },
-    get_book_detail: function(book_id) {
-      getBookDetail(book_id).then(res => {
-        this.refreshTable(res);
-      });
+      this.$data.tableData = res.image_url_list;
+      this.$data.pageination.total = res.image_url_list.length;
     },
     get_chapter_detail: function(chapter_id) {
-      getBookChapterDetail(chapter_id).then(res => {
-        this.$data.dialogContent = res.content;
+      getComicChapterDetail(chapter_id).then(res => {
+        this.refreshTable(res);
       });
-    },
-    tableRowClassName: function({ row }) {
-      if (row.task_status === "FINISH") {
-        return "success-row";
-      } else if (row.task_status === "FAILD") {
-        return "warning-row";
-      }
-      return "";
     },
     handleClick(row, type) {
       if (type === "detail") {
@@ -90,12 +82,10 @@ export default {
       }
     },
     handleSizeChange(val) {
-      this.$data.pageSize = val;
+      console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      let start = this.$data.pageSize * (val - 1);
-      console.log(this.$data.allTableData);
-      this.$data.tableData = this.$data.allTableData.slice(start, start + this.$data.pageSize);
+      console.log(`当前页: ${val}`);
     },
     doSearch(row) {
       console.log(row);
@@ -118,7 +108,7 @@ export default {
     }
   },
   mounted: function() {
-    this.get_book_detail(this.$data.book_id);
+    this.get_chapter_detail(this.$data.chapter_id);
   }
 };
 </script>
@@ -132,6 +122,10 @@ export default {
 
 .success-row {
   background: #9ce773 !important;
+}
+
+.icon_image {
+  width: 105px;
 }
 </style>
 

@@ -34,12 +34,9 @@
       <el-table-column prop="id" label="ID" width="180"></el-table-column>
       <el-table-column fixed prop="title" label="书名" width="180"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
+      <el-table-column prop="author" label="作者" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <!-- <router-link :to="{name: 'book_detail', params: {id: scope.row.id} }">
-            <el-button type="text" size="small">查看</el-button>
-          </router-link>-->
-          <!-- <el-button @click="handleClick(scope.row, 'detail')" type="text" size="small">查看</el-button> -->
           <el-button @click="handleClick(scope.row, 'detail')" type="text" size="small">查看</el-button>
           <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
         </template>

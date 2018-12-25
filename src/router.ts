@@ -4,6 +4,8 @@ import MobileView from './components/MobileView.vue';
 // import TaskEdit from './components/TaskEdit.vue';
 import TaskList from './components/TaskList.vue';
 import ComicList from './components/ComicList.vue';
+import ComicDetail from './components/ComicDetail.vue';
+import ComicChapterDetail from './components/ComicChapterDetail.vue';
 import BookList from './components/BookList.vue';
 import BookDetail from './components/BookDetail.vue';
 import TabBase from './views/TabBase.vue';
@@ -19,6 +21,8 @@ export default new Router({
       component: TabBase,
       children: [
         { path: '', name: "comic_list", component: ComicList },
+        { path: ':id', name: "comic_detail", component: ComicDetail },
+        { path: 'chapter/:id', name: "comic_chapter_detail", component: ComicChapterDetail },
       ]
     },
     {
