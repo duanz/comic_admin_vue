@@ -1,11 +1,12 @@
 <template>
-  <el-menu
-    v-if="tabList.length>0"
-    :default-active="activeIndex"
-    mode="horizontal"
-    router
-  >
-    <el-menu-item v-for="item in tabList" :key="item[1]" :index="item[1]" :route="{name: item[1]}">
+  <el-menu v-if="tabList.length>0" :default-active="activeIndex" mode="horizontal" router>
+    <el-menu-item
+      v-for="item in tabList"
+      :key="item[1]"
+      :index="item[1]"
+      :route="{name: item[1]}"
+      :disabled="item[1].indexOf('detail')>0"
+    >
       <span slot="title">{{item[0]}}</span>
     </el-menu-item>
   </el-menu>
@@ -15,7 +16,7 @@ export default {
   name: "topMenu",
   data: function() {
     return {
-      activeIndex: 0,
+      activeIndex: "",
       tabList: [],
       comic_tabs: [["漫画列表", "comic_list"], ["漫画详情", "comic_detail"]],
       book_tabs: [["小说列表", "book_list"], ["小说详情", "book_detail"]],
@@ -38,7 +39,8 @@ export default {
       } else if (route_name.indexOf("system") !== -1) {
         this.$data.tabList = this.$data.system_tabs;
       }
-      this.$data.activeIndex = this.$data.tabList[0][1];
+      // this.$data.activeIndex = this.$data.tabList[0][1];
+      this.$data.activeIndex = this.$route.name;
     }
   },
   mounted: function() {
@@ -47,6 +49,7 @@ export default {
   watch: {
     $route: function() {
       this.set_tabList_data();
+      console.log(this.$route.name);
     }
   }
 };
