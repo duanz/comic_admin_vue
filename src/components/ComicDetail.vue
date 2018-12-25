@@ -28,8 +28,8 @@
       @current-change="handleCurrentChange"
       :current-page="pageination.current"
       :background="true"
-      :page-sizes="[30, 100, 200]"
-      :page-size="pageSize"
+      :page-sizes="[30, 1]"
+      :page-size="30"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageination.total"
     ></el-pagination>
@@ -37,37 +37,34 @@
 </template>
 <script>
 import { TASK_TYPE, TASK_STATUS } from "../config/commentData";
-import { getBookDetail, getBookChapterDetail } from "../api/bookApi";
+import { getComicDetail, getComicChapterDetail } from "../api/comicApi";
 
 export default {
-  name: "bookDetail",
+  name: "comicDetail",
   data: function() {
     return {
-      book_id: this.$route.params.id,
+      comic_id: this.$route.params.id,
       search_title: "",
       search_time: "",
       tableData: [],
       chapterTable: [],
       pageination: { current: 0, total: 0 },
       detailDialog: false,
-      dialogContent: "",
-      allTableData: "",
-      pageSize: 30
+      dialogContent: ""
     };
   },
   methods: {
     refreshTable: function(res) {
-      this.$data.allTableData = res.chapter;
-      this.$data.tableData = res.chapter.slice(0, this.$data.pageSize);
+      this.$data.tableData = res.chapter;
       this.$data.pageination.total = res.chapter.length;
     },
-    get_book_detail: function(book_id) {
-      getBookDetail(book_id).then(res => {
+    get_comic_detail: function(comic_id) {
+      getComicDetail(comic_id).then(res => {
         this.refreshTable(res);
       });
     },
     get_chapter_detail: function(chapter_id) {
-      getBookChapterDetail(chapter_id).then(res => {
+      getComicChapterDetail(chapter_id).then(res => {
         this.$data.dialogContent = res.content;
       });
     },
@@ -81,8 +78,7 @@ export default {
     },
     handleClick(row, type) {
       if (type === "detail") {
-        this.get_chapter_detail(row.id);
-        this.$data.detailDialog = true
+        this.$router.push({ name: "comic_chapter_detail", params: { id: row.id } });
       } else {
         this.$data.edit_task_id = row.id;
         this.$data.edit_type = type;
@@ -90,12 +86,10 @@ export default {
       }
     },
     handleSizeChange(val) {
-      this.$data.pageSize = val;
+      console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      let start = this.$data.pageSize * (val - 1);
-      console.log(this.$data.allTableData);
-      this.$data.tableData = this.$data.allTableData.slice(start, start + this.$data.pageSize);
+      console.log(`当前页: ${val}`);
     },
     doSearch(row) {
       console.log(row);
@@ -118,7 +112,7 @@ export default {
     }
   },
   mounted: function() {
-    this.get_book_detail(this.$data.book_id);
+    this.get_comic_detail(this.$data.comic_id);
   }
 };
 </script>

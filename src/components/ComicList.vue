@@ -31,10 +31,9 @@
       :row-class-name="tableRowClassName"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column fixed prop="task_status" label="任务状态" width="150"></el-table-column>
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
-      <el-table-column prop="task_type" label="任务类型" width="150"></el-table-column>
-      <el-table-column prop="content" label="内容" width="280"></el-table-column>
+      <el-table-column prop="title" label="书名" width="150"></el-table-column>
+      <el-table-column prop="author" label="作者" width="100"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
       <el-table-column prop="active" label="是否生效" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
@@ -100,9 +99,14 @@ export default {
       return "";
     },
     handleClick(row, type) {
-      this.$data.edit_task_id = row.id;
-      this.$data.edit_type = type;
-      this.$data.editDialog = true;
+      if (type === "detail") {
+      console.log(row.id);
+        this.$router.push({ name: "comic_detail", params: { id: row.id } });
+      } else {
+        this.$data.edit_task_id = row.id;
+        this.$data.edit_type = type;
+        this.$data.editDialog = true;
+      }
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);

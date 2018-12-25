@@ -6,5 +6,5 @@ export const getComicList = () => get('/api/comic/', {});
 export const getHistory = () => get('/api/history/', {});
 
 // 漫画详情
-export const getComicDetail = (comic_id) => get('/api/comic/' + comic_id);
-export const getComicChapterDetail = (chapter_id) => get('/api/comic/chapter/' + chapter_id);
+export const getComicDetail = (comic_id) => get('/api/comic/' + comic_id + '/');
+export const getComicChapterDetail = (chapter_id) => get('/api/comic/chapter/' + chapter_id + '/');
