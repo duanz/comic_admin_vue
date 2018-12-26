@@ -7,7 +7,8 @@ import ComicList from './components/ComicList.vue';
 import ComicDetail from './components/ComicDetail.vue';
 import ComicChapterDetail from './components/ComicChapterDetail.vue';
 import BookList from './components/BookList.vue';
-import BookDetail from './components/BookDetail.vue';
+import BookChapterList from './components/BookChapterList.vue';
+import IndexBlock from './components/IndexBlock.vue';
 import TabBase from './views/TabBase.vue';
 
 Vue.use(Router);
@@ -30,7 +31,7 @@ export default new Router({
       component: TabBase,
       children: [
         { path: '', name: "book_list", component: BookList },
-        { path: ':id', name: "book_detail", component: BookDetail },
+        { path: ':id', name: "book_detail", component: BookChapterList },
       ]
     },
     {
@@ -43,6 +44,7 @@ export default new Router({
       component: TabBase,
       children: [
         { path: '', name: "task_list", component: TaskList },
+        { path: 'index_block', name: "index_block", component: IndexBlock },
       ]
     },
   ],

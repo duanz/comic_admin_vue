@@ -4,25 +4,15 @@
       <div>{{dialogContent}}</div>
     </el-dialog>
 
-    <el-table
-      ref="chapterTable"
-      :data="tableData"
-      @selection-change="handleSelectionChange"
-      :row-class-name="tableRowClassName"
-    >
-      <el-table-column
-        label="日期">
+    <el-table ref="chapterTable" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table-column label="日期">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="日期"
-        width="150">
+      <el-table-column label="预览" width="150">
         <template slot-scope="scope">
-          <!-- <i class="el-icon-time"></i> -->
-          <img src="https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1559121849,1979113738&fm=85&s=C7B839C51643035D9F1961B70300D000" class="icon_image">
-          <!-- <img :src="scope.row" class="icon_image"> -->
+          <img :src="scope.row" class="icon_image">
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
@@ -74,7 +64,7 @@ export default {
     handleClick(row, type) {
       if (type === "detail") {
         this.get_chapter_detail(row.id);
-        this.$data.detailDialog = true
+        this.$data.detailDialog = true;
       } else {
         this.$data.edit_task_id = row.id;
         this.$data.edit_type = type;

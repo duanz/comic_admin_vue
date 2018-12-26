@@ -11,15 +11,19 @@
         <el-button type="primary" @click="doSearch">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" @click="editDialog = !editDialog">添加任务</el-button>
+        <el-button type="success" @click="task.editDialog = !task.editDialog">添加任务</el-button>
       </el-form-item>
     </el-form>
 
-    <el-dialog title="任务编辑" :visible.sync="editDialog" width="30%" @close="closeDialog">
+    <el-dialog title="编辑小说" :visible.sync="block.editDialog" width="30%" @close="closeDialog">
+      <IndexBlockEdit :block="block" :is_clear="!block.editDialog" @close="closeDialog"/>
+    </el-dialog>
+
+    <el-dialog title="任务编辑" :visible.sync="task.editDialog" width="30%" @close="closeDialog">
       <TaskEdit
-        :task_id="edit_task_id"
-        :edit_type="edit_type"
-        :is_clear="!editDialog"
+        :task_id="task.edit_task_id"
+        :edit_type="task.edit_type"
+        :is_clear="!task.editDialog"
         @close="closeDialog"
       />
     </el-dialog>
@@ -32,14 +36,15 @@
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
-      <el-table-column prop="title" label="书名" width="150"></el-table-column>
+      <el-table-column prop="title" label="书名" width="200"></el-table-column>
       <el-table-column prop="author" label="作者" width="100"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
       <el-table-column prop="active" label="是否生效" width="100"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
+      <el-table-column fixed="right" label="操作" width="250">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row, 'detail')" type="text" size="small">查看</el-button>
           <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
+          <el-button @click="handleClick(scope.row, 'index')" type="text" size="small">添加首页</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,23 +64,31 @@
 <script>
 import { getComicList } from "../api/comicApi";
 import TaskEdit from "../components/TaskEdit";
+import IndexBlockEdit from "../components/IndexBlockEdit";
 import { TASK_TYPE, TASK_STATUS } from "../config/commentData";
 
 export default {
   name: "comicList",
   components: {
+    IndexBlockEdit,
     TaskEdit
   },
   data: function() {
     return {
-      editDialog: false,
-      edit_task_id: 0,
-      edit_type: "",
       search_title: "",
       search_time: "",
       tableData: [],
       taskTable: [],
-      pageination: { current: 0, total: 0 }
+      pageination: { current: 0, total: 0 },
+      block: {
+        id: 0,
+        content_id: 0,
+        desc_type: "",
+        editDialog: false,
+        edit_type: "",
+        block_type: "COMIC"
+      },
+      task: { edit_task_id: 0, edit_type: "", editDialog: false }
     };
   },
   methods: {
@@ -100,12 +113,11 @@ export default {
     },
     handleClick(row, type) {
       if (type === "detail") {
-      console.log(row.id);
+        console.log(row.id);
         this.$router.push({ name: "comic_detail", params: { id: row.id } });
-      } else {
-        this.$data.edit_task_id = row.id;
-        this.$data.edit_type = type;
-        this.$data.editDialog = true;
+      } else if (type === "index") {
+        this.$data.block.content_id = row.id;
+        this.$data.block.editDialog = true;
       }
     },
     handleSizeChange(val) {
@@ -130,8 +142,8 @@ export default {
       this.taskTable = val;
     },
     closeDialog: function() {
-      this.$data.edit_task_id = 0;
-      this.$data.editDialog = false;
+      Object.assign(this.$data.block, this.$options.data("block"));
+      Object.assign(this.$data.task, this.$options.data("task"));
     }
   },
   mounted: function() {

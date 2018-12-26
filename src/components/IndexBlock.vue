@@ -2,30 +2,22 @@
   <el-container direction="vertical">
     <el-form :inline="true" class="form-inline" size="mini">
       <el-form-item label="书名">
-        <el-input v-model="search_title" placeholder="书名"></el-input>
+        <el-input v-model="filter.title__icontains" placeholder="书名"></el-input>
       </el-form-item>
-      <el-form-item label="更新时间">
-        <el-date-picker v-model="search_time" type="date" placeholder="更新时间"></el-date-picker>
+      <el-form-item label="原始地址">
+        <el-input v-model="filter.origin_addr__icontains" placeholder="原始地址"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="doSearch">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" @click="task.editDialog = !task.editDialog">添加小说</el-button>
+        <el-button type="success" @click="block.editDialog = !block.editDialog">添加元素</el-button>
+        <el-button type="info" @click="get_block_list">刷新</el-button>
       </el-form-item>
     </el-form>
 
     <el-dialog title="编辑小说" :visible.sync="block.editDialog" width="30%" @close="closeDialog">
       <IndexBlockEdit :block="block" :is_clear="!block.editDialog" @close="closeDialog"/>
-    </el-dialog>
-
-    <el-dialog title="任务编辑" :visible.sync="task.editDialog" width="30%" @close="closeDialog">
-      <TaskEdit
-        :task_id="task.edit_task_id"
-        :edit_type="task.edit_type"
-        :is_clear="!task.editDialog"
-        @close="closeDialog"
-      />
     </el-dialog>
 
     <el-table
@@ -35,15 +27,17 @@
       :row-class-name="tableRowClassName"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="ID" width="180"></el-table-column>
-      <el-table-column fixed prop="title" label="书名" width="180"></el-table-column>
+      <el-table-column prop="id" label="ID" width="50"></el-table-column>
+      <el-table-column prop="title" label="内容主题" width="150"></el-table-column>
+      <el-table-column prop="content_id" label="内容ID" width="100"></el-table-column>
+      <el-table-column prop="block_type" label="模块类型" width="100"></el-table-column>
+      <el-table-column prop="desc_type" label="模块类型" width="100"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
-      <el-table-column prop="author" label="作者" width="100"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="250">
+      <el-table-column prop="active" label="是否生效" width="100"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row, 'detail')" type="text" size="small">查看</el-button>
           <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
-          <el-button @click="handleClick(scope.row, 'index')" type="text" size="small">添加首页</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,33 +55,36 @@
   </el-container>
 </template>
 <script>
-import { getBookList } from "../api/bookApi";
-import TaskEdit from "../components/TaskEdit";
+import {
+  getIndexBlockList,
+  createIndexBlock,
+  getComicChapterDetail
+} from "../api/utilsApi";
+import { BLOCK_TYPE_CHOICES, BLOCK_DESC_CHOICES } from "../config/commentData";
 import IndexBlockEdit from "../components/IndexBlockEdit";
-import { TASK_TYPE, TASK_STATUS } from "../config/commentData";
 
 export default {
-  name: "taskList",
+  name: "indexBlock",
   components: {
-    IndexBlockEdit,
-    TaskEdit
+    IndexBlockEdit
   },
   data: function() {
     return {
-      search_title: "",
-      search_time: "",
-      tableData: [],
-      taskTable: [],
-      pageination: { current: 0, total: 0 },
       block: {
         id: 0,
         content_id: 0,
         desc_type: "",
         editDialog: false,
-        edit_type: "",
-        block_type: "BOOK"
+        edit_type: ""
       },
-      task: { edit_task_id: 0, edit_type: "", editDialog: false }
+      tableData: [],
+      taskTable: [],
+      pageination: { current: 0, total: 0 },
+      filter: {
+        active: true,
+        limit: 30,
+        offset: ""
+      }
     };
   },
   methods: {
@@ -95,24 +92,29 @@ export default {
       this.$data.tableData = res.results;
       this.$data.pageination.total = res.count;
     },
-    get_book_list: function() {
-      getBookList().then(res => {
+    get_block_list: function() {
+      getIndexBlockList().then(res => {
         this.refreshTable(res);
       });
     },
     tableRowClassName: function({ row }) {
       if (row.task_status === "FINISH") {
+        console.log(1);
         return "success-row";
       } else if (row.task_status === "FAILD") {
+        console.log(2);
         return "warning-row";
       }
       return "";
     },
     handleClick(row, type) {
       if (type === "detail") {
-        this.$router.push({ name: "book_detail", params: { id: row.id } });
-      } else if (type === "index") {
-        this.$data.block.content_id = row.id;
+        this.$data.block.id = row.id;
+        this.$data.block.edit_type = type;
+        this.$data.block.editDialog = true;
+      } else if (type === "edit") {
+        this.$data.block.id = row.id;
+        this.$data.block.edit_type = type;
         this.$data.block.editDialog = true;
       }
     },
@@ -138,12 +140,17 @@ export default {
       this.taskTable = val;
     },
     closeDialog: function() {
-      Object.assign(this.$data.block, this.$options.data("block"));
-      Object.assign(this.$data.task, this.$options.data("task"));
+      this.$data.block = {
+        block_id: 0,
+        content_id: 0,
+        desc_type: "",
+        editDialog: false,
+        edit_type: ""
+      };
     }
   },
   mounted: function() {
-    this.get_book_list();
+    this.get_block_list();
   }
 };
 </script>

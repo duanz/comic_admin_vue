@@ -60,6 +60,7 @@ export default {
   props: {
     task_id: { default: 0, type: Number },
     edit_type: "",
+    content: "",
     is_clear: { default: true, type: Boolean }
   },
   methods: {
@@ -105,6 +106,8 @@ export default {
   mounted: function() {
     if (this.$props.task_id != 0) {
       this.refreshData(this.$props.task_id);
+    } else if (this.$props.content) {
+      this.$data.form.content = this.$props.content;
     }
   },
   watch: {
@@ -117,6 +120,11 @@ export default {
     is_clear: function(val) {
       if (val) {
         this.$refs.editTaskForm.resetFields();
+      }
+    },
+    content: function(val) {
+      if (val) {
+        this.$data.form.content = val;
       }
     }
   }

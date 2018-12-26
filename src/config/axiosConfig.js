@@ -66,7 +66,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     res => {
         // Loading.service({ fullscreen: true }).close();
-        if (res.status === 200) {
+        if (res.status === 200 || res.status === 201) {
             if (res.data.code === 404) {
                 MessageBox.alert("处理失败");
                 return Promise.reject(res);

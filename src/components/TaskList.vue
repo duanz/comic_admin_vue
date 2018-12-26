@@ -92,10 +92,8 @@ export default {
     },
     tableRowClassName: function({ row }) {
       if (row.task_status === "FINISH") {
-        console.log(1);
         return "success-row";
       } else if (row.task_status === "FAILD") {
-        console.log(2);
         return "warning-row";
       }
       return "";
