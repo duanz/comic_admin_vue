@@ -1,9 +1,5 @@
 <template>
   <el-container class="height" direction="vertical">
-    <el-header>
-
-    <TopMenu></TopMenu>
-    </el-header>
     <el-main>
     
     <router-view></router-view>
@@ -12,6 +8,8 @@
 </template>
 <script>
 import TopMenu from "@/components/TopMenu.vue";
+import {Storager} from "../utils/storage.ts";
+
 export default {
   name: "tabViewBase",
   components: {

@@ -1,17 +1,13 @@
 <template>
   <el-container class="height">
-    <el-header style="background-color:#409EFF;">
-      <el-row>
-        <el-col :span="4" class="text-left"></el-col>
-        <el-col :span="20"></el-col>
-      </el-row>
+    <el-header style="background-color:#409EFF;padding: 0 !important;">
+      <top-menu></top-menu>
     </el-header>
 
     <el-container>
-      <el-aside width="auto">
-        <LeftMenu></LeftMenu>
+      <el-aside v-if="is_auth" width="auto">
+        <left-menu></left-menu>
       </el-aside>
-
       <el-main style="background-color:#F2F6FC;">
         <router-view></router-view>
       </el-main>
@@ -34,7 +30,8 @@ export default {
   },
   data: function() {
     return {
-      admin_view: true
+      admin_view: true,
+      is_auth: localStorage.getItem('token')?true:false
     };
   },
   methods: {
@@ -46,6 +43,7 @@ export default {
 </script>
 
 <style scoped>
+/* @import url("//unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css"); */
 .height {
   height: 100%;
 }
@@ -54,6 +52,9 @@ export default {
 }
 .mobile_view {
   height: 123%;
+}
+.logo-size {
+  font-size: 60px;
 }
 </style>
 
