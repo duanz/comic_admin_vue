@@ -10,8 +10,9 @@ import BookList from './components/BookList.vue';
 import BookChapterList from './components/BookChapterList.vue';
 import IndexBlock from './components/IndexBlock.vue';
 import TabBase from './views/TabBase.vue';
+import Base from './views/Base.vue';
 import Login from './components/Login.vue';
-import {Storager} from "./utils/storage"
+import Storager from './utils/storage';
 
 Vue.use(VueRouter);
 
@@ -20,6 +21,14 @@ const Router = new VueRouter({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/',
+      name: 'index',
+      component: TabBase,
+      children: [
+        { path: '', name: 'do_login', component: Login, meta: { requireAuth: false } },
+      ],
+    },
     {
       path: '/comic',
       component: TabBase,
@@ -36,7 +45,7 @@ const Router = new VueRouter({
       path: '/book',
       component: TabBase,
       meta: {
-        requireAuth: true, 
+        requireAuth: true,
       },
       children: [
         { path: '', name: 'book_list', component: BookList, meta: { requireAuth: true } },
@@ -51,7 +60,10 @@ const Router = new VueRouter({
     {
       path: '/login',
       name: 'login',
-      component: Login,
+      component: TabBase,
+      children: [
+        { path: '', name: 'do_login', component: Login, meta: { requireAuth: false } },
+      ],
     },
     {
       path: '/system',
@@ -66,31 +78,24 @@ const Router = new VueRouter({
       ],
     },
   ],
-  
+
 });
 
 
 Router.beforeEach((to, from, next) => {
-  console.log(Storager.isAuth())
-  console.log(to)
-  console.log(from)
   if (to.meta.requireAuth || from.meta.requireAuth) {  // 判断该路由是否需要登录权限
-    console.log(Storager.isAuth())
     if (Storager.isAuth()) {  // 通过vuex state获取当前的token是否存在
-      console.log("to next")
       next();
-    }
-    else {
+    } else {
       next({
         path: '/login',
-        query: { redirect: to.fullPath }  // 将跳转的路由path作为参数，登录成功后跳转到该路由
-      })
+        query: { redirect: to.fullPath },  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+      });
     }
-  }
-  else {
+  } else {
     next();
   }
-})
+});
 
 
 export default Router;

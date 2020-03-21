@@ -4,6 +4,7 @@ import axios from 'axios'
 import qs from 'qs'
 // import { loadingInstance } from '../config/commentData';
 import Storager from "../utils/storage.ts"
+import Cookier from "../utils/cookier"
 import { Loading, MessageBox } from 'element-ui';
 // export const loadingInstance = Loading.service({ fullscreen: true });
 // http://www.php.cn/js-tutorial-394589.html
@@ -26,14 +27,15 @@ Vue.prototype.$static = "../assets"
 // 添加请求拦截器
 axios.interceptors.request.use(
     config => {
-        Loading.service({ fullscreen: true });
+        // Loading.service({ fullscreen: true });
 
         if (config.method === 'post') {
             config.data = qs.stringify(config.data);
             config.headers = {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
                 "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "x-requested-with,content-type"
+                "Access-Control-Allow-Headers": "x-requested-with,content-type",
+                "X-CSRFToken": Cookier.get("csrftoken")
             }
         }
 
@@ -41,6 +43,7 @@ axios.interceptors.request.use(
         // config.headers.common["Access-Control-Allow-Origin"] = "*";
 
         if (config.needAuth) {
+            console.log("check if auth")
             var isAuth = Storager.isAuth();
             var token = Storager.get('token');
             if (!isAuth) {
@@ -57,7 +60,7 @@ axios.interceptors.request.use(
 
     err => {
         console.log(err);
-        Loading.service({ fullscreen: true }).close();
+        // Loading.service({ fullscreen: true }).close();
         MessageBox.alert("处理失败");
         return Promise.reject(err);
     }
@@ -67,7 +70,8 @@ axios.interceptors.request.use(
 // 添加响应拦截器
 axios.interceptors.response.use(
     res => {
-        Loading.service({ fullscreen: true }).close();
+        console.log(res)
+        // Loading.service({ fullscreen: true }).close();
         if (res.status === 200 || res.status === 201) {
             if (res.data.code === 404) {
                 MessageBox.alert("请求地址错误");
@@ -82,12 +86,21 @@ axios.interceptors.response.use(
 
             return Promise.resolve(res);
         } else {
+            if (res.status === 500) {
+                MessageBox.alert("服务其有点忙,稍后再试");
+                return Promise.reject(res);
+             }
             MessageBox.alert("处理失败");
             return Promise.reject(res);
         }
     },
     err => {
-        Loading.service({ fullscreen: true }).close();
+        console.log(res)
+        if (res.status === 500) {
+            MessageBox.alert("服务其有点忙,稍后再试");
+            return 
+        }
+        // Loading.service({ fullscreen: true }).close();
         MessageBox.alert("处理失败");
         return Promise.reject(err)
     }

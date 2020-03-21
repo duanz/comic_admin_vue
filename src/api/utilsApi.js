@@ -1,7 +1,7 @@
 import { get, post } from '../config/axiosConfig';
 
 // 任务列表
-export const getUtilsTask = () => get('/api/utils/task/', {}, true);
+export const getUtilsTask = (data) => get('/api/utils/task/', data, true);
 // 新增任务表单
 export const createUtilsTask = (formData) => post('/api/utils/task/', formData, true);
 

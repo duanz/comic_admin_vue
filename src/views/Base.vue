@@ -1,15 +1,14 @@
 <template>
   <el-container class="height">
     <el-header style="background-color:#409EFF;padding: 0 !important;">
-      <top-menu></top-menu>
+      <top-menu :isAuth="is_auth"></top-menu>
     </el-header>
-
     <el-container>
       <el-aside v-if="is_auth" width="auto">
-        <left-menu></left-menu>
+        <LeftMenu></LeftMenu>
       </el-aside>
-      <el-main style="background-color:#F2F6FC;">
-        <router-view></router-view>
+      <el-main>
+        <TabBase v-on:userState="changeUserState" />
       </el-main>
     </el-container>
     <el-footer style="background-color:#909399;"></el-footer>
@@ -17,26 +16,31 @@
 </template>
 
 <script>
-import LeftMenu from "@/components/LeftMenu.vue";
 import TopMenu from "@/components/TopMenu.vue";
+import LeftMenu from "@/components/LeftMenu";
 import MobileView from "@/components/MobileView.vue";
+import TabBase from "@/views/TabBase";
 
 export default {
   name: "Base",
   components: {
     MobileView,
+    TopMenu,
     LeftMenu,
-    TopMenu
+    TabBase
   },
   data: function() {
     return {
       admin_view: true,
-      is_auth: localStorage.getItem('token')?true:false
+      is_auth: localStorage.getItem("token") ? true : false
     };
   },
   methods: {
     handleMobileView: function() {
       this.$data.admin_view = this.$data.admin_view ? false : true;
+    },
+    changeUserState: function(e) {
+      this.$data.is_auth = e;
     }
   }
 };

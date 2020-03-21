@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <Base />
-  </div>
+  <el-container id="app">
+    <Base v-if="isRouterAlive" />
+  </el-container>
 </template>
 
 <script>
@@ -9,12 +9,26 @@ import Base from "./views/Base.vue";
 
 export default {
   name: "app",
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
   components: {
     Base
   },
   data() {
     return {
+      isRouterAlive: true
     };
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
+    }
   }
 };
 </script>

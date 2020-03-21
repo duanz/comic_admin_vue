@@ -1,9 +1,10 @@
 
 import { get, post } from '../config/axiosConfig';
+import {Storager} from "../utils/storage"
 
 
 export const login = (formData) => post('/api/members/login/', formData, false);
-export const logout = () => post('/api/members/logout/', {}, true);
+export const logout = () => post('/api/members/logout/', {}, false);
 
 
 
@@ -36,7 +37,7 @@ export const logout = () => post('/api/members/logout/', {}, true);
 //     })
 // },
 // handleError: function (content, res) {
-//     var errMsg = "网络错误";
+//     var errMs g = "网络错误";
 //     localStorage.clear();
 //     switch (res.status) {
 //         case 401:

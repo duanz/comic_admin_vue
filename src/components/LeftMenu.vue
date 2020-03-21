@@ -5,7 +5,7 @@
       :key="item[1]"
       :index="item[1]"
       :route="{name: item[1]}"
-      :disabled="item[1].indexOf('detail')>0"
+      :disabled="item[1].indexOf('detail')>0&&item[1]!=activeIndex"
     >
       <span slot="title">{{item[0]}}</span>
     </el-menu-item>
@@ -13,7 +13,7 @@
 </template>
 <script>
 export default {
-  name: "topMenu",
+  name: "leftMenu",
   data: function() {
     return {
       activeIndex: "",

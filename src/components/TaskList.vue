@@ -1,18 +1,18 @@
 <template>
   <el-container direction="vertical">
-    <el-form :inline="true" class="form-inline" size="mini">
+    <el-form :model="search_form" :inline="true" class="form-inline" size="mini">
       <el-form-item label="书名">
-        <el-input v-model="search_title" placeholder="书名"></el-input>
+        <el-input v-model="search_form.title__icontains" placeholder="书名"></el-input>
       </el-form-item>
       <el-form-item label="更新时间">
-        <el-date-picker v-model="search_time" type="date" placeholder="更新时间"></el-date-picker>
+        <el-date-picker v-model="search_form.update_at__lte" type="date" placeholder="更新时间"></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="doSearch">搜索</el-button>
+        <el-button type="primary" @click="get_task_list">搜索</el-button>
+        <el-button type="success" @click="get_task_list">刷新</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="editDialog = !editDialog">添加任务</el-button>
-        <el-button type="info" @click="get_task_list">刷新</el-button>
       </el-form-item>
     </el-form>
 
@@ -35,13 +35,32 @@
       <el-table-column fixed prop="task_status" label="任务状态" width="150"></el-table-column>
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="task_type" label="任务类型" width="150"></el-table-column>
-      <el-table-column prop="content" label="内容" width="280"></el-table-column>
+      <el-table-column prop="content" label="内容" width="400"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
       <el-table-column prop="active" label="是否生效" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row, 'detail')" type="text" size="small">查看</el-button>
-          <el-button @click="handleClick(scope.row, 'edit')" type="text" size="small">编辑</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-view"
+            @click="handleClick(scope.row, 'detail')"
+            circle
+          ></el-button>
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-edit"
+            @click="handleClick(scope.row, 'edit')"
+            circle
+          ></el-button>
+          <el-button
+            size="small"
+            type="danger"
+            icon="el-icon-delete"
+            @click="handleClick(scope.row, 'delete')"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -73,8 +92,10 @@ export default {
       editDialog: false,
       edit_task_id: 0,
       edit_type: "",
-      search_title: "",
-      search_time: "",
+      search_form: {
+        title__icontains: "",
+        update_at__lte: ""
+      },
       tableData: [],
       taskTable: [],
       pageination: { current: 0, total: 0 }
@@ -86,7 +107,7 @@ export default {
       this.$data.pageination.total = res.count;
     },
     get_task_list: function() {
-      getUtilsTask().then(res => {
+      getUtilsTask(this.$data.search_form).then(res => {
         this.refreshTable(res);
       });
     },
@@ -109,10 +130,8 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    doSearch(row) {
-      console.log(row);
-    },
     toggleSelection(rows) {
+      console.log(22);
       if (rows) {
         rows.forEach(row => {
           this.$refs.taskTable.toggleRowSelection(row);
@@ -137,6 +156,7 @@ export default {
 <style>
 .form-inline {
   text-align: left;
+  line-height: normal;
 }
 .warning-row {
   background: #e77373 !important;
@@ -144,6 +164,9 @@ export default {
 
 .success-row {
   background: #9ce773 !important;
+}
+.el-main .el-table {
+  line-height: normal;
 }
 </style>
 

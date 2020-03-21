@@ -1,29 +1,31 @@
 <template>
-  <el-container class="height" direction="vertical">
-    <el-main>
-    
-    <router-view></router-view>
-    </el-main>
+  <el-container class="height">
+    <router-view v-on:userState="changeUserState"></router-view>
   </el-container>
 </template>
 <script>
-import TopMenu from "@/components/TopMenu.vue";
-import {Storager} from "../utils/storage.ts";
+import { Storager } from "@/utils/storage";
+import LeftMenu from "@/components/LeftMenu.vue";
 
 export default {
   name: "tabViewBase",
   components: {
-    TopMenu
+    LeftMenu
   },
   data: function() {
     return {
       tabList: [],
-      current_tab_name: ""
+      current_tab_name: "",
+      is_auth: localStorage.getItem("token") ? true : false
     };
   },
   methods: {
     handleTabClick: function(val) {
       console.log(val);
+    },
+    changeUserState: function(e) {
+      this.$data.is_auth = e;
+      this.$emit("userState", e);
     }
   }
 };
