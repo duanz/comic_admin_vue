@@ -17,7 +17,7 @@
     </el-form>
 
     <el-dialog title="编辑小说" :visible.sync="block.editDialog" width="30%" @close="closeDialog">
-      <IndexBlockEdit :block="block" :is_clear="!block.editDialog" @close="closeDialog"/>
+      <IndexBlockEdit :block="block" :is_clear="!block.editDialog" @close="closeDialog" />
     </el-dialog>
 
     <el-dialog title="任务编辑" :visible.sync="task.editDialog" width="30%" @close="closeDialog">
@@ -42,10 +42,41 @@
       <el-table-column prop="author" label="作者" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="250">
         <template slot-scope="scope">
-          <el-button size="small" type="primary" icon="el-icon-view" @click="handleClick(scope.row, 'detail')" circle></el-button>
-          <el-button size="small" type="primary" icon="el-icon-edit" @click="handleClick(scope.row, 'edit')" circle></el-button>
-          <el-button size="small" type="danger" icon="el-icon-delete" @click="handleClick(scope.row, 'delete')" circle></el-button>
-          <el-button @click="handleClick(scope.row, 'index')" type="success" size="small">添加首页</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-view"
+            @click="handleClick(scope.row, 'detail')"
+            circle
+          ></el-button>
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-edit"
+            @click="handleClick(scope.row, 'edit')"
+            circle
+          ></el-button>
+          <el-button
+            size="small"
+            type="danger"
+            icon="el-icon-delete"
+            @click="handleClick(scope.row, 'delete')"
+            circle
+          ></el-button>
+          <a
+            class="el-button el-button--success el-button--small is-circle"
+            :href="scope.row.download_url"
+            v-if="scope.row.is_download"
+          >
+            <i class="el-icon-download"></i>
+          </a>
+          <el-button
+            size="small"
+            type="success"
+            icon="el-icon-share"
+            @click="handleClick(scope.row, 'index')"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -119,13 +150,12 @@ export default {
         this.$data.block.content_id = row.id;
         this.$data.block.editDialog = true;
       } else if (type === "delete") {
-        this.$confirm('删除后不可恢复,坚决要删除吗', '删除'+row.title, {
-          confirmButtonText: '确定',
-          cancelButtonText: '放弃',
+        this.$confirm("删除后不可恢复,坚决要删除吗", "删除" + row.title, {
+          confirmButtonText: "确定",
+          cancelButtonText: "放弃",
           callback: action => {
-            if(action == "confirm"){
+            if (action == "confirm") {
               deleteBook(row.id);
-
             }
           }
         });

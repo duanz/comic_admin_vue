@@ -35,10 +35,10 @@
       <el-table-column fixed prop="task_status" label="任务状态" width="150"></el-table-column>
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="task_type" label="任务类型" width="150"></el-table-column>
-      <el-table-column prop="content" label="内容" width="400"></el-table-column>
+      <el-table-column prop="content" label="内容" width="300"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
       <el-table-column prop="active" label="是否生效" width="100"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
+      <el-table-column fixed="right" label="操作" width="250">
         <template slot-scope="scope">
           <el-button
             size="small"

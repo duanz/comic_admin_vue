@@ -64,7 +64,20 @@
             @click="handleClick(scope.row, 'delete')"
             circle
           ></el-button>
-          <el-button @click="handleClick(scope.row, 'index')" type="success" size="small">添加首页</el-button>
+          <a
+            class="el-button el-button--success el-button--small is-circle"
+            :href="scope.row.download_url"
+            v-if="scope.row.is_download"
+          >
+            <i class="el-icon-download"></i>
+          </a>
+          <el-button
+            size="small"
+            type="success"
+            icon="el-icon-share"
+            @click="handleClick(scope.row, 'index')"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
