@@ -75,6 +75,14 @@
             size="small"
             type="success"
             icon="el-icon-share"
+            @click="handleClick(scope.row, 'sendKindle')"
+            circle
+          ></el-button>
+          <el-button
+            v-if="false"
+            size="small"
+            type="success"
+            icon="el-icon-share"
             @click="handleClick(scope.row, 'index')"
             circle
           ></el-button>
@@ -96,6 +104,7 @@
 </template>
 <script>
 import { getComicList, deleteComic } from "../api/comicApi";
+import { createUtilsTask } from "../api/utilsApi";
 import TaskEdit from "../components/TaskEdit";
 import IndexBlockEdit from "../components/IndexBlockEdit";
 import { TASK_TYPE, TASK_STATUS } from "../config/commentData";
@@ -127,12 +136,16 @@ export default {
     };
   },
   methods: {
+    close: function() {
+      this.$emit("close");
+    },
     refreshTable: function(res) {
       this.$data.tableData = res.results;
       this.$data.pageination.total = res.count;
     },
     get_comic_list: function() {
       getComicList(this.$data.search_form).then(res => {
+        this.handleFormRes(res);
         this.refreshTable(res);
       });
     },
@@ -152,6 +165,15 @@ export default {
       } else if (type === "index") {
         this.$data.block.content_id = row.id;
         this.$data.block.editDialog = true;
+      } else if (type === "sendKindle") {
+        let form = {
+          task_type: 'SEND_TO_KINDLE',
+          active: true,
+          task_status: 'WAIT',
+          content: '{"content_id": ' + row.id + ', "content_type":"comic"}',
+          markup: ""
+        };
+        this.create_task(form);
       } else if (type === "delete") {
         this.$confirm("删除后不可恢复,坚决要删除吗", "删除" + row.title, {
           confirmButtonText: "确定",
@@ -162,6 +184,20 @@ export default {
             }
           }
         });
+      }
+    },
+    create_task: function(form) {
+      createUtilsTask(form).then(res => {
+        this.handleFormRes(res);
+      });
+    },
+    handleFormRes: function(res) {
+      console.log(res);
+      if (res.code == 200 || res.code == undefined) {
+        this.close();
+        this.$notify({ title: "通知", message: "处理成功", duration:1000 });
+      } else {
+        this.$notify({ title: "通知", message: "处理失败, " + res.msg, duration:1000 });
       }
     },
     handleSizeChange(val) {

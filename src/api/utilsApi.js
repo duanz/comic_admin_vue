@@ -1,4 +1,4 @@
-import { get, post } from '../config/axiosConfig';
+import { get, post, remove } from '../config/axiosConfig';
 
 // 任务列表
 export const getUtilsTask = (data) => get('/api/utils/task/', data, true);
@@ -7,6 +7,8 @@ export const createUtilsTask = (formData) => post('/api/utils/task/', formData, 
 
 // 任务详情
 export const getUtilsTaskDetail = (task_id) => get('/api/utils/task/' + task_id + '/', {}, true);
+// 删除任务
+export const deleteUtilsTask = (task_id) => remove('/api/utils/task/' + task_id + '/', {}, true);
 // 修改任务表单
 export const editUtilsTask = (task_id, formData) => post('/api/utils/task/' + task_id + '/', formData, true);
 

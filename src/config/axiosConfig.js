@@ -29,7 +29,7 @@ axios.interceptors.request.use(
     config => {
         // Loading.service({ fullscreen: true });
 
-        if (config.method === 'post') {
+        if (config.method === 'post' || config.method === 'delete' || config.method === 'put') {
             config.data = qs.stringify(config.data);
             config.headers = {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
@@ -72,7 +72,7 @@ axios.interceptors.response.use(
     res => {
         console.log(res)
         // Loading.service({ fullscreen: true }).close();
-        if (res.status === 200 || res.status === 201) {
+        if (res.status === 200 || res.status === 201 || res.status === 204) {
             if (res.data.code === 404) {
                 MessageBox.alert("请求地址错误");
                 return Promise.reject(res);

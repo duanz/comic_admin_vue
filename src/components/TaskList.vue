@@ -78,7 +78,7 @@
   </el-container>
 </template>
 <script>
-import { getUtilsTask } from "../api/utilsApi";
+import { getUtilsTask, deleteUtilsTask } from "../api/utilsApi";
 import TaskEdit from "../components/TaskEdit";
 import { TASK_TYPE, TASK_STATUS } from "../config/commentData";
 
@@ -120,9 +120,15 @@ export default {
       return "";
     },
     handleClick(row, type) {
-      this.$data.edit_task_id = row.id;
-      this.$data.edit_type = type;
-      this.$data.editDialog = true;
+      if(type === 'delete'){
+        deleteUtilsTask(row.id).then(res => {
+          this.get_task_list();
+      });
+      }else if(type==="detail"||type==="edit"){
+        this.$data.edit_task_id = row.id;
+        this.$data.edit_type = type;
+        this.$data.editDialog = true;
+      }
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
