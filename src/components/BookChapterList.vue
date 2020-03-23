@@ -14,18 +14,18 @@
       <TaskEdit :is_clear="!taskDialog" @close="closeDialog" :content="taskContent"/>
     </el-dialog>
 
-    <el-form :inline="true" class="form-inline" size="mini">
-      <el-form-item label="书名">
-        <el-input v-model="filter.title__icontains" placeholder="书名"></el-input>
+    <el-form :model="filter" :inline="true" class="form-inline" size="mini">
+      <el-form-item label="章名">
+        <el-input v-model="filter.title__icontains" placeholder="章名"></el-input>
       </el-form-item>
       <el-form-item label="原始地址">
         <el-input v-model="filter.origin_addr__icontains" placeholder="原始地址"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="doSearch">搜索</el-button>
+        <el-button type="primary" @click="get_chapter_list">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="info" @click="get_chapter_list(book_id, filter)">刷新</el-button>
+        <el-button type="info" @click="get_chapter_list">刷新</el-button>
       </el-form-item>
     </el-form>
 
@@ -36,9 +36,9 @@
       :row-class-name="tableRowClassName"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="ID" width="180"></el-table-column>
-      <el-table-column prop="title" label="章节名" width="180"></el-table-column>
-      <el-table-column prop="origin_addr" label="原始地址" width="550"></el-table-column>
+      <el-table-column prop="id" label="ID" width="100"></el-table-column>
+      <el-table-column prop="title" label="章节名" width="300"></el-table-column>
+      <el-table-column prop="origin_addr" label="原始地址" width="400"></el-table-column>
       <el-table-column prop="update_at" label="更新时间"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
@@ -94,8 +94,8 @@ export default {
       this.$data.tableData = res.results;
       this.$data.pageination.total = res.count;
     },
-    get_chapter_list: function(book_id, filter) {
-      getBookChapterList(book_id, filter).then(res => {
+    get_chapter_list: function() {
+      getBookChapterList(this.$data.book_id, this.$data.filter).then(res => {
         this.refreshTable(res);
       });
     },

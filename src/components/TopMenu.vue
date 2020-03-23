@@ -1,56 +1,109 @@
 <template>
-  <el-menu v-if="tabList.length>0" :default-active="activeIndex" mode="horizontal" router>
-    <el-menu-item
-      v-for="item in tabList"
-      :key="item[1]"
-      :index="item[1]"
-      :route="{name: item[1]}"
-      :disabled="item[1].indexOf('detail')>0"
-    >
-      <span slot="title">{{item[0]}}</span>
-    </el-menu-item>
+  <el-menu
+    :default-active="menuActive"
+    mode="horizontal"
+    class="el-menu-demo"
+    background-color="#545c64"
+    active-text-color="rgb(116, 235, 255)"
+    @select="handleSelect"
+    router
+  >
+    <el-row>
+      <el-col class="bgcolor" :span="2">
+        <div class="block height">
+          <i class="logo-size el-icon-magic-stick"></i>
+        </div></el-col>
+      <el-col :span="5">
+        <el-menu-item index="comic_list" route="/comic">
+          <i class="el-icon-picture"></i>
+          <span slot="title">漫画管理</span>
+        </el-menu-item>
+      </el-col>
+      <el-col :span="5">
+        <el-menu-item index="book_list" route="/book">
+          <i class="el-icon-tickets"></i>
+          <span slot="title">小说管理</span>
+        </el-menu-item>
+      </el-col>
+      <el-col :span="5">
+        <el-menu-item index="user" route="/user">
+          <i class="el-icon-service"></i>
+          <span slot="title">用户管理</span>
+        </el-menu-item>
+      </el-col>
+      <el-col :span="5">
+        <el-menu-item index="task_list" route="/system">
+          <i class="el-icon-setting"></i>
+          <span slot="title">系统管理</span>
+        </el-menu-item>
+      </el-col>
+      <el-col v-if="isAuth" :span="2">
+        <el-dropdown>
+          <span class="el-dropdown-link" style="color:chartreuse;">
+            {{userInfo.username}}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <a @click="dologout()">
+              <el-dropdown-item>退出</el-dropdown-item>
+            </a>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-col>
+    </el-row>
   </el-menu>
 </template>
 <script>
+import Storager from "../utils/storage";
+import { logout } from "../api/memberApi";
 export default {
   name: "topMenu",
+  inject: ["reload"],
+  props: {
+    isAuth: Storager.isAuth()
+  },
   data: function() {
     return {
-      activeIndex: "",
-      tabList: [],
-      comic_tabs: [["漫画列表", "comic_list"], ["漫画详情", "comic_detail"], ["章节详情", "comic_chapter_detail"]],
-      book_tabs: [["小说列表", "book_list"], ["小说详情", "book_detail"]],
-      user_tabs: [["用户列表", "user_list"]],
-      system_tabs: [["任务列表", "task_list"], ["首页设置", "index_block"]]
+      userInfo: Storager.isAuth() ? Storager.getUserInfo() : {},
+      userState: Storager.isAuth(),
+      menuActive: this.$route.path
     };
   },
   methods: {
-    handleSelect: function(index, indexPath) {
-      // this.$router.push({ name: "system_task" });
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath)
+      this.$data.menuActive = key;
+      console.log(this.$data.menuActive)
     },
-    set_tabList_data: function() {
-      const route_name = this.$route.path;
-      if (route_name.indexOf("comic") !== -1) {
-        this.$data.tabList = this.$data.comic_tabs;
-      } else if (route_name.indexOf("book") !== -1) {
-        this.$data.tabList = this.$data.book_tabs;
-      } else if (route_name.indexOf("user") !== -1) {
-        this.$data.tabList = this.$data.user_tabs;
-      } else if (route_name.indexOf("system") !== -1) {
-        this.$data.tabList = this.$data.system_tabs;
-      }
-      this.$data.activeIndex = this.$route.name;
+    dologout() {
+      Storager.clear();
+      logout();
+      this.resetVal();
+      // this.reload()
+      this.$router.go(0);
+    },
+    resetVal() {
+      this.$data.userInfo = Storager.isAuth() ? Storager.getUserInfo() : {};
+      this.$data.userState = Storager.isAuth();
     }
   },
-  mounted: function() {
-    this.set_tabList_data();
+  mounted(){
+    console.log(this.$route.name)
+    this.$data.menuActive = this.$route.name;
   },
   watch: {
-    $route: function() {
-      this.set_tabList_data();
-      // this.$data.activeIndex = this.$route.name;
+    isAuth: function(news, old) {
+      if (!news) {
+        this.$router.push({ path: "/login" });
+      } else {
+        this.$data.userInfo = Storager.getUserInfo();
+      }
     }
   }
 };
 </script>
-
+<style scoped>
+.bgcolor {
+  background-color: cadetblue;
+}
+</style>
